@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken')
 
 
 router.post('/register', async (req, res) => {
+    if (req.body.password === '') {
+        return res.status(402).send('Password reqiured')
+    }
     const hashPassword = await bcrypt.hashSync(req.body.password, 8)
     const user = new User({
         username: req.body.username,
@@ -17,7 +20,7 @@ router.post('/register', async (req, res) => {
             res.send(data)
         })
         .catch((err) => {
-            res.send("Can't Add Username" || { message: err.message })
+            res.status(403).send("Can't Add Username" || { message: err.message })
         })
 });
 

@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 //routes
 app.use('/api/user', UserRoutes)
-app.use('/api/message', messageRoutes)
+app.use('/api/message', auth, messageRoutes)
 
 //connecting to DB
 mongoose.connect('mongodb://localhost:27017/chatDB',
