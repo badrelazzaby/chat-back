@@ -2,21 +2,13 @@ const express = require('express')
 const router = express.Router()
 const Message = require('../models/message.model')
 const jwt = require('jsonwebtoken')
-const IOserver = require('../index')
 
 
-router.post('/store-message/:id', async (req, res) => {
-    
-    req.io.on('connection' , (socket) => {
-        socket.on('message', async (data) => { 
-            console.log(data)
-        });
-    })
 
+router.post('/store-message', async (req, res) => {
     try {
         const message = new Message({
             message: req.body.message,
-            userId: req.params.id
         })
         await message.save()
             .then((data) => {

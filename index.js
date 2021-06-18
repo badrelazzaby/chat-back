@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 //routes
 app.use('/api/user', UserRoutes)
-app.use('/api/message', auth, messageRoutes)
+app.use('/api/message', messageRoutes)
 
 //connecting to DB
 mongoose.connect('mongodb://localhost:27017/chatDB',
@@ -41,8 +41,15 @@ mongoose.connect('mongodb://localhost:27017/chatDB',
 
 io.on('connection' , (socket) => {
     console.log("User connected with " + socket.id);
-    
-})
+
+    socket.on('disconnect', () => {
+        console.log('user with iD ' + socket.id+ ' disconnected');
+    })  
+
+    socket.on('send-message', async (data) => {
+      io.emit('message', data)
+    })
+});
 
 server.listen(5000, () => {
     console.log('server listening on port 5000')
