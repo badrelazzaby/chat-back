@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
     try {
         await User.findOne({ username: username }, (err, user) => {
             if (err) return res.status(500).send("Error")
-            if (!user) return res.status(422).send("Username not valide")
+            if (!user) return res.status(422).send({ message: "Username not valide" })
             if (user) {
                 let checkUserPassword = bcrypt.compareSync(password, user.password)
                 if (checkUserPassword) {
@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
             // res.send({ user: user, token: token })
         })
     } catch (error) {
-        res.send("something Wrong")
+        res.status(500).send({ message: "something Wrong" })
     }
 });
 

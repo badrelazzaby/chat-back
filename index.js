@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 //routes
 app.use('/api/user', UserRoutes)
-app.use('/api/message', auth, messageRoutes)
+app.use('/api/message',messageRoutes)
 
 //connecting to DB
 mongoose.connect('mongodb://localhost:27017/chatDB',
@@ -40,7 +40,11 @@ mongoose.connect('mongodb://localhost:27017/chatDB',
     console.log('Connected to DB'))
 
 io.on('connection' , (socket) => {
+
+    io.emit('user-connected', data)
+
     console.log("User connected with " + socket.id);
+
 
     socket.on('disconnect', () => {
         console.log('user with iD ' + socket.id+ ' disconnected');
@@ -49,6 +53,11 @@ io.on('connection' , (socket) => {
     socket.on('send-message', async (data) => {
       io.emit('message', data)
     })
+
+    socket.on('user-connection', async (data) => {
+        io.emit('user-connected', data)
+    })
+    
 });
 
 server.listen(5000, () => {
