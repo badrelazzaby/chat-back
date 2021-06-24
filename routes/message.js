@@ -14,6 +14,8 @@ router.post('/store-message', async (req, res) => {
         await message.save()
             .then((data) => {
                 res.send(data)
+               
+                
             })
     } catch (error) {
         if (error) res.status(500).send("token error")

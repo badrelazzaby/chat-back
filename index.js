@@ -32,32 +32,31 @@ app.use((req, res, next) => {
 
 //routes
 app.use('/api/user', UserRoutes)
-app.use('/api/message',messageRoutes)
+app.use('/api/message', messageRoutes)
 
 //connecting to DB
 mongoose.connect('mongodb://localhost:27017/chatDB',
-    { useNewUrlParser: true, useUnifiedTopology: true },
+    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
     console.log('Connected to DB'))
 
-io.on('connection' , (socket) => {
-
+io.on('connection', (socket, data) => {
     io.emit('user-connected', data)
 
     console.log("User connected with " + socket.id);
 
-
     socket.on('disconnect', () => {
-        console.log('user with iD ' + socket.id+ ' disconnected');
-    })  
+        console.log('user with iD ' + socket.id + ' disconnected');
+    })
 
     socket.on('send-message', async (data) => {
-      io.emit('message', data)
+        console.log(data);
+        io.emit('message', data)
     })
 
-    socket.on('user-connection', async (data) => {
-        io.emit('user-connected', data)
-    })
-    
+    // socket.on('user-connection', async (data) => {
+    //     console.log(data);
+    //     io.emit('user-connected', data)
+    // })
 });
 
 server.listen(5000, () => {
